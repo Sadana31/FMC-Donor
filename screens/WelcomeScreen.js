@@ -18,7 +18,7 @@ export default class WelcomeScreen extends React.Component{
   constructor(){
     super();
     this.state={
-      emailId:'',
+      emailID:'',
       password:'',
       firstName:'',
       lastName:'',
@@ -29,8 +29,8 @@ export default class WelcomeScreen extends React.Component{
     }
   }
 
-  login=(emailId, password)=>{
-    firebase.auth().signInWithEmailAndPassword(emailId, password)
+  login=(emailID, password)=>{
+    firebase.auth().signInWithEmailAndPassword(emailID, password)
     .then(()=>{
       this.props.navigation.navigate("DonateScreen");
     })
@@ -42,18 +42,18 @@ export default class WelcomeScreen extends React.Component{
     })
   }
 
-  signUp=(emailId, password, confirmPassword)=>{
+  signUp=(emailID, password, confirmPassword)=>{
     if(password !== confirmPassword){
       return Alert.alert("Passwords do not match")
     }
     else{
-      firebase.auth().createUserWithEmailAndPassword(emailId, password)
+      firebase.auth().createUserWithEmailAndPassword(emailID, password)
       .then(()=>{
         db.collection('users').add({
-          first_name:this.state.firstName,
-          last_name:this.state.lastName,
+          firstName:this.state.firstName,
+          lastName:this.state.lastName,
           contact:this.state.contact,
-          email_id:this.state.emailId,
+          emailID:this.state.emailID,
           address:this.state.address
         })
         return  Alert.alert(
@@ -133,7 +133,7 @@ export default class WelcomeScreen extends React.Component{
               keyboardType ={'email-address'}
               onChangeText={(text)=>{
                 this.setState({
-                  emailId: text
+                  emailID: text
                 })
               }}
             /><TextInput
@@ -162,14 +162,14 @@ export default class WelcomeScreen extends React.Component{
                 onPress={()=>{
                   if(this.state.firstName===undefined || this.state.lastName === undefined ||
                   this.state.contact===undefined || this.state.address ===undefined ||
-                  this.state.emailId===undefined || this.state.password===undefined ||
+                  this.state.emailID===undefined || this.state.password===undefined ||
                   this.state.confirmPassword===undefined){
                     console.log("Check")
                     return Alert.alert("Please fill in all the details!!")
                   }
                   else{ 
                     console.log("uncheck")
-                    this.signUp(this.state.emailId, this.state.password, 
+                    this.signUp(this.state.emailID, this.state.password, 
                       this.state.confirmPassword)
                     }
                   }
@@ -215,7 +215,7 @@ export default class WelcomeScreen extends React.Component{
           keyboardType="email-address"
             placeholder="Enter your email"
             onChangeText={(text)=>{
-              this.setState({emailId: text})
+              this.setState({emailID: text})
             }}
           />
 
@@ -228,9 +228,11 @@ export default class WelcomeScreen extends React.Component{
           />
 
           <TouchableOpacity style={styles.button}
-          onPress={()=>{this.login(this.state.emailId, this.state.password)}} >
+          onPress={()=>{this.login(this.state.emailID, this.state.password)}} >
             <Text style={styles.buttonText}>SIGN IN</Text>
           </TouchableOpacity>
+
+          <Text style={[styles.head, {marginTop: 20}]}>Don't have an account? Sign</Text>
 
           <TouchableOpacity style={styles.button}
           onPress={()=>this.setState({ modalVisible:true})} >

@@ -15,6 +15,10 @@ export default class FoodRequestScreen extends React.Component {
         }
     }
 
+    createUniqueId(){
+        return Math.random().toString(36).substring(7);
+    }
+
     addFoodRequest=()=>{
         db.collection("requestedItems").add({
             "name": this.state.foodName,
@@ -23,6 +27,7 @@ export default class FoodRequestScreen extends React.Component {
             "requesterID": this.state.emailID,
             "date": firebase.firestore.FieldValue.serverTimestamp(),
             "hasRequestedForMedicine": false,
+            "requestID": this.createUniqueId()
         })
         this.setState({
             foodName: "",

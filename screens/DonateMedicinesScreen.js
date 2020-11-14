@@ -10,7 +10,13 @@ export default class MedicinesDonateScreen extends React.Component {
     render(){
         return(
             <View>
-                <MyHeader text="Donate Medicines" navigation={this.props.navigation}/>
+                <Header
+                    leftComponent ={<Icon name='arrow-left' type='feather' 
+                    color='white'  onPress={() => this.props.navigation.goBack()}/>}
+                    cecenterComponent={{text: this.props.text, 
+                        style:{fontWeight: "bold", fontSize: 20, color: "darkblue"}}}
+                    backgroundColor = "lightblue"
+                />
                 <Text style={{textAlign: "center", marginTop: 100}}>
                     There are currently no medicine requests
                 </Text>

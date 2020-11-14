@@ -16,7 +16,7 @@ export default class MedicineRequestScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          nameOfMedicine: "",
+          name: "",
           activeIndex:0,
           requestStatus: true,
           docID: "",
@@ -58,13 +58,14 @@ export default class MedicineRequestScreen extends React.Component {
               borderRadius: 5,
               height: 250,
               padding: 50,
-              marginTop: 50,
-              marginLeft: 35,
-              marginRight: 25,
-             marginBottom: 50 }}
+              margin: 30
+              // marginTop: 50,
+              // marginLeft: 35,
+              // marginRight: 25,
+              }}
               >
             <Text style={{fontSize: 25, fontWeight: "bold"}}>{item.title}</Text>
-            <Text style={{marginTop: 10}}>{item.subTitle}</Text>
+            <Text style={{marginTop: 10, fontSize: 18}}>{item.subTitle}</Text>
           </TouchableOpacity>
 
         )
@@ -87,9 +88,22 @@ export default class MedicineRequestScreen extends React.Component {
     var blob = await response.blob();
     var ref = firebase.storage().ref().child("userPrescriptions/" + imageName);
     return ref.put(blob).then((response)=>{
-       alert("Image upload successful");
+       this.fetchImage(imageName);
     })
   }
+
+  fetchImage = (imageName) => {
+    var storageRef = firebase
+      .storage().ref().child("userPrescriptions/" + imageName);
+    storageRef
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ image: url });
+      })
+      .catch((error) => {
+        this.setState({ image: "#" });
+      });
+  };
 
   createUniqueId(){
     return Math.random().toString(36).substring(7);
@@ -98,15 +112,16 @@ export default class MedicineRequestScreen extends React.Component {
     addRequest=()=>{
       var randomRequestId = this.createUniqueId()
       db.collection("requestedItems").add({
-        "nameOfMedicine": this.state.nameOfMedicine,
+        "name": this.state.name,
         "requesterID": this.state.userID,
         "requestID": randomRequestId,
+        "type": "medicine"
       })
       db.collection("users").doc(this.state.docID).update({
         hasRequestedForMedicine: true
       })
       this.setState({
-        nameOfMedicine :'',
+        name :'',
         requestID: randomRequestId
     })
     return Alert.alert("Medicine Requested Successfully")
@@ -117,10 +132,10 @@ export default class MedicineRequestScreen extends React.Component {
       var requestId = this.state.requestID
       db.collection('receivedItems').add({
           "userID": userId,
-          "name":bookName,
+          "name":name,
           "requestID"  : requestId,
           "Status"  : "received",
-    
+          "type": "medicine"
       })
     }
 
@@ -173,7 +188,7 @@ export default class MedicineRequestScreen extends React.Component {
           .then((snapshot)=>{
             snapshot.forEach((doc) => {
               var donorId  = doc.data().donorID
-              var name =  doc.data().nameOfMedicine
+              var name =  doc.data().name
     
               //targert user id is the donor id to send notification to the user
               db.collection('allNotifications').add({
@@ -202,7 +217,7 @@ export default class MedicineRequestScreen extends React.Component {
               onPress={()=>{
                 this.sendNotification();
                 this.updateRequestStatus();
-                this.receivedItems(this.state.nameOfMedicine);
+                this.receivedItems(this.state.name);
               }}>
                 <Text style={styles.buttonText}>I received the medicine</Text>
               </TouchableOpacity>
@@ -211,10 +226,10 @@ export default class MedicineRequestScreen extends React.Component {
       }
       else {
         return (
-          <SafeAreaView style={{flex: 1, alignItems: "center", marginBottom: -170}}>
+          <SafeAreaView style={{ alignItems: "center", flex: 1}}>
 
             <MyHeader text="Medicines" navigation={this.props.navigation}/>
-            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', marginBottom: -200}}>
                 <Carousel
                   layout={"default"}
                   ref={ref => this.carousel = ref}
@@ -224,15 +239,15 @@ export default class MedicineRequestScreen extends React.Component {
                   renderItem={this._renderItem}
                   onSnapToItem = { 
                     index =>{ 
-                    this.setState({nameOfMedicine:index})
+                    this.setState({name:index})
                     console.log(this.state.carouselItems[index].title);
                   }} />
             </View>
 
-            <View style={{marginTop: 10}}>
+            <View >
               <Text style={styles.head}>
                 If you are in need of any other medicines, 
-                kindly upload a PRESCRIPTION given by a PROPER DOCTOR
+                kindly upload a PRESCRIPTION given by a DOCTOR
               </Text>
 
               <Avatar rounded
@@ -240,8 +255,7 @@ export default class MedicineRequestScreen extends React.Component {
                 uri: this.state.image
                 }}
                 size="xlarge"
-                title="med"
-                fontSize="10"
+                title="IMG"
                 onPress={()=>{this.selectPicture()}}
                 alignSelf="center"
                 showEditButton
@@ -260,8 +274,7 @@ export default class MedicineRequestScreen extends React.Component {
 const styles = StyleSheet.create({
     head: {
         fontWeight: "bold",
-        fontSize: 20,
-        marginTop: 50,
+        fontSize: 25,
         color: "darkblue",
         textAlign: 'center',
         margin: 7,
@@ -270,20 +283,19 @@ const styles = StyleSheet.create({
     button: {
       borderRadius: 10,
       backgroundColor: "#0080ff",
-      width: "60%",
+      width: 250,
       height: "10%",
       alignSelf: "center",
-      marginTop: -200
+      marginTop: 20
   },
   buttonText: {
       textAlign: "center",
       color: "white",
       fontWeight: "bold",
-      fontSize: 15,
+      fontSize: 18,
       marginTop: 6
   },
   avatar: {
-    marginBottom: 200,
     alignSelf: "center"
   }
 })

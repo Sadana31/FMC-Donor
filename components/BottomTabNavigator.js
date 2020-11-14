@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import MedicineRequestScreen from '../screens/MedicineRequestScreen';
 import ClothesRequestScreen from '../screens/ClothesRequestScreen';
 import FoodRequestScreen from '../screens/FoodRequestScreen';
-import AppStackNavigator from '../components/AppStackNavigator';
+import DonateStack from '../components/DonateStack';
 
 export const BottomTabNavigator = createBottomTabNavigator({
   MedicineRequestScreen : {
@@ -29,7 +29,7 @@ export const BottomTabNavigator = createBottomTabNavigator({
     }
   },
   DonateScreen : {
-    screen: AppStackNavigator,
+    screen: DonateStack,
     navigationOptions :{
       tabBarIcon: <Image source={require("../assets/donate.png")} style={{width: 25, height: 25}}/>,
       tabBarLabel : "Donate Items",

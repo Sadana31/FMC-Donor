@@ -22,11 +22,15 @@ export default class FoodRequestScreen extends React.Component {
             "type": "cloth",
             "synopsis": this.state.synopsis,
             "requesterID": this.state.emailID,
-            "date": firebase.firestore.FieldValue.serverTimestamp()
+            "date": firebase.firestore.FieldValue.serverTimestamp(),
+            "requestID": this.createUniqueId()
         })
         return Alert.alert("Cloth requested successfully!!");
     }
 
+    createUniqueId(){
+        return Math.random().toString(36).substring(7);
+    }
     
     render(){
         return(
