@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         marginTop: 40, 
         backgroundColor: "orange", 
-        borderWIDth: 3,
+        borderWidth: 3,
         margin: 10,
         borderRadius: 10}
   })
