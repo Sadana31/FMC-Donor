@@ -11,7 +11,7 @@ export default class FoodRequestScreen extends React.Component {
             emailID: firebase.auth().currentUser.email,
             foodName: "",
             synopsis: "",
-            perishable: "",
+            docID: "",
         }
     }
 
@@ -26,12 +26,7 @@ export default class FoodRequestScreen extends React.Component {
             "synopsis": this.state.synopsis,
             "requesterID": this.state.emailID,
             "date": firebase.firestore.FieldValue.serverTimestamp(),
-            "hasRequestedForMedicine": false,
             "requestID": this.createUniqueId()
-        })
-        this.setState({
-            foodName: "",
-            synopsis: "",
         })
         return Alert.alert("Food item requested successfully!!");
     }

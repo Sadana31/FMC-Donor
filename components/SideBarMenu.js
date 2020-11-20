@@ -1,5 +1,5 @@
 import React , {Component } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {DrawerItems} from 'react-navigation-drawer';
 import db from '../config';
@@ -12,7 +12,7 @@ export default class CustomSideBarMenu extends Component{
   constructor(){
       super();
       this.state = {
-        userId: firebase.auth().currentUser.email,
+        userID: firebase.auth().currentUser.email,
         image: "#",
         name: "",
         docId: "",
@@ -27,7 +27,7 @@ export default class CustomSideBarMenu extends Component{
       quality: 1
     }) 
     if(! cancelled){
-      this.uploadImage(uri,this.state.userId);
+      this.uploadImage(uri,this.state.userID);
     }
   }
 
@@ -56,7 +56,7 @@ export default class CustomSideBarMenu extends Component{
   }
 
   getUserProfile=()=>{
-    db.collection("users").where("emailID","==",this.state.userId)
+    db.collection("users").where("emailID","==",this.state.userID)
     .onSnapshot((snapshot)=>{
       snapshot.forEach((doc)=>{
         this.setState({
@@ -69,7 +69,7 @@ export default class CustomSideBarMenu extends Component{
   }
 
   componentDidMount(){
-    this.fetchImage(this.state.userId);
+    this.fetchImage(this.state.userID);
     this.getUserProfile();
   }
     render(){
@@ -91,6 +91,10 @@ export default class CustomSideBarMenu extends Component{
                 <View style = {styles.drawerItemsContainer}>
                     <DrawerItems {...this.props} />
                 </View>
+                
+                <Image source={require("../assets/donate-icon.png")}
+                  style={{width: 200, height: 200, alignSelf: "center", marginTop: -200}} />
+
                 <View style={styles.logOutContainer}>
                     <TouchableOpacity style = {styles.logOutButton}
                         onPress={()=>{
