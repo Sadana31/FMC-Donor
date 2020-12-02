@@ -94,10 +94,9 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, FlatList,TouchableOpacity, Image} from 'react-native';
-import { ListItem } from 'react-native-elements'
+import { ListItem, Header, Icon } from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config'
-import MyHeader from '../components/MyHeader';
 
 export default class BookDonateScreen extends Component{
   constructor(){
@@ -127,7 +126,7 @@ export default class BookDonateScreen extends Component{
         this.requestRef();
       }
     
-      keyExtractor = (item, index) => index.toString()
+    keyExtractor = (item, index) => index.toString()
 
   renderItem = ( {item, i} ) =>{
     return (
@@ -155,17 +154,17 @@ export default class BookDonateScreen extends Component{
       <View style={{flex:1}}>
         <Header
             leftComponent ={<Icon name='arrow-left' type='feather' 
-            color='white'  onPress={() => this.props.navigation.goBack()}/>}
-            cecenterComponent={{text: this.props.text, 
-                style:{fontWeight: "bold", fontSize: 20, color: "darkblue"}}}
-            backgroundColor = "lightblue"
+            color='white'  onPress={() => this.props.navigation.navigate("DonateScreen")}/>}
+            centerComponent={{text: "Donate items", 
+                style:{fontWeight: "bold", fontSize: 20, color: "white"}}}
+            backgroundColor = "#0080ff"
           />
         <View style={{flex:1}}>
           {
             this.state.requesteditemsList.length === 0
             ?(
               <View style={styles.subContainer}>
-                <Text style={{ fontSize: 20}}>List Of All Requested Books</Text>
+                <Text style={{ fontSize: 20}}>There are currently no requests</Text>
               </View>
             )
             :(
@@ -194,11 +193,6 @@ const styles = StyleSheet.create({
     height:30,
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:"#ff5722",
-    shadowColor: "#000",
-    shadowOffset: {
-       width: 0,
-       height: 8
-     }
+    backgroundColor:"#0080ff",
   }
 })

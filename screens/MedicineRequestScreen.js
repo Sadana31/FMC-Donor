@@ -21,6 +21,7 @@ export default class MedicineRequestScreen extends React.Component {
           requestStatus: true,
           docID: "",
           requestID: "",
+          image: "",
           userID: firebase.auth().currentUser.email,
           carouselItems: [
           {
@@ -58,12 +59,7 @@ export default class MedicineRequestScreen extends React.Component {
               borderRadius: 5,
               height: 250,
               padding: 50,
-              margin: 30
-              // marginTop: 50,
-              // marginLeft: 35,
-              // marginRight: 25,
-              }}
-              >
+              margin: 30}}>
             <Text style={{fontSize: 25, fontWeight: "bold"}}>{item.title}</Text>
             <Text style={{marginTop: 10, fontSize: 18}}>{item.subTitle}</Text>
           </TouchableOpacity>
@@ -111,11 +107,12 @@ export default class MedicineRequestScreen extends React.Component {
   
     addRequest=()=>{
       var randomRequestId = this.createUniqueId()
-      db.collection("requestedItems").add({
+      db.collection("requestedMedicines").add({
         "name": this.state.name,
         "requesterID": this.state.userID,
         "requestID": randomRequestId,
-        "type": "medicine"
+        "type": "medicine",
+        "imageURL": this.state.image
       })
       db.collection("users").doc(this.state.docID).update({
         hasRequestedForMedicine: true
@@ -128,10 +125,10 @@ export default class MedicineRequestScreen extends React.Component {
     }
 
     receivedItems=(name)=>{
-      var userId = this.state.userID
+      var userID = this.state.userID
       var requestId = this.state.requestID
       db.collection('receivedItems').add({
-          "userID": userId,
+          "userID": userID,
           "name":name,
           "requestID"  : requestId,
           "Status"  : "received",
@@ -140,8 +137,8 @@ export default class MedicineRequestScreen extends React.Component {
     }
 
     getDocID=()=>{
-      db.collection("users").where("emailID","==",this.state.userID).get()
-      .then((snapshot)=>{
+      db.collection("users").where("emailID","==",this.state.userID)
+      .onSnapshot((snapshot)=>{
         snapshot.forEach((doc)=>{
           this.setState({docID: doc.id})
         })
@@ -163,7 +160,7 @@ export default class MedicineRequestScreen extends React.Component {
     }
 
     updateRequestStatus=()=>{
-      db.collection('users').where('emailID','==',this.state.userId).get()
+      db.collection('users').where('emailID','==',this.state.userID).get()
       .then((snapshot)=>{
         snapshot.forEach((doc) => {
           //updating the doc
@@ -176,7 +173,7 @@ export default class MedicineRequestScreen extends React.Component {
 
     sendNotification=()=>{
       //to get the first name and last name
-      db.collection('users').where('emailID','==',this.state.userId).get()
+      db.collection('users').where('emailID','==',this.state.userID).get()
       .then((snapshot)=>{
         snapshot.forEach((doc)=>{
           var name = doc.data().firstName
@@ -241,7 +238,7 @@ export default class MedicineRequestScreen extends React.Component {
                     index =>{ 
                     this.setState({name:index})
                     console.log(this.state.carouselItems[index].title);
-                  }} />
+                  }}/>
             </View>
 
             <View >
@@ -261,7 +258,7 @@ export default class MedicineRequestScreen extends React.Component {
                 showEditButton
                 containerStyle={styles.avatar}/>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={this.addRequest()}>
               <Text style={styles.buttonText}>REQUEST</Text>
             </TouchableOpacity>
             </View>

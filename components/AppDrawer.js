@@ -5,7 +5,7 @@ import CustomSideBarMenu  from './SideBarMenu';
 import SettingsScreen from '../screens/SettingsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import ReceivedItems from '../screens/ReceivedItems';
-import {Icon } from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 
 export const AppDrawer = createDrawerNavigator({
   Home : {
@@ -18,7 +18,7 @@ export const AppDrawer = createDrawerNavigator({
   Notifications: {
     screen: NotificationsScreen,
     navigationOptions: {
-        drawerIcon: <Icon name="notifications-none" size={30} color="black" />,
+        drawerIcon: <Icon name="notifications" size={30} color="black" />,
         drawerLabel: "Notifications  "
     }
   },

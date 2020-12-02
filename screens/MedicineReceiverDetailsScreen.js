@@ -1,10 +1,10 @@
 import React ,{Component} from 'react';
-import {View,Text,StyleSheet,TouchableOpacity, Alert} from 'react-native';
+import {View,Text,StyleSheet,TouchableOpacity, Alert, Image} from 'react-native';
 import {Card,Header,Icon} from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config.js';
 
-export default class ReceiverDetailsScreen extends Component{
+export default class MedicineReceiverDetailsScreen extends Component{
   constructor(props){
     super(props);
     this.state={
@@ -14,6 +14,7 @@ export default class ReceiverDetailsScreen extends Component{
       requestID       : this.props.navigation.getParam('details')["requestID"],  
       itemName        : this.props.navigation.getParam('details')["name"],
       type: this.props.navigation.getParam('details')["type"],
+      imageURL: this.props.navigation.getParam('details')["imageURL"],
       receiverName    : '',
       receiverContact : '',
       receiverAddress : '',
@@ -35,7 +36,7 @@ getReceiverDetails(){
     })
   });
 
-  db.collection('requestedItems').where('requestID','==',this.state.requestID).get()
+  db.collection('requestedMedicines').where('requestID','==',this.state.requestID).get()
   .then(snapshot=>{
     snapshot.forEach(doc => {
       this.setState({receiverRequestDocID:doc.id})
@@ -97,6 +98,7 @@ deleteDoc=()=>{
   this.props.navigation.navigate('DonateScreen')
  }
 
+
   render(){
     return(
       <View style={styles.container}>
@@ -117,9 +119,7 @@ deleteDoc=()=>{
             <Card >
               <Text style={{fontWeight:'bold'}}>Name : {this.state.itemName}</Text>
             </Card>
-            <Card>
-              <Text style={{fontWeight:'bold'}}>Reason : {this.state.type}</Text>
-            </Card>
+            <Image source={{uri: this.state.imageURL}}/>
           </Card>
         </View>
         <View style={styles.card}>
@@ -145,7 +145,7 @@ deleteDoc=()=>{
               <TouchableOpacity
                   style={styles.button}
                   onPress={()=>{
-                      this.alert()
+                    this.alert()
                   }}>
                 <Text>Send Item</Text>
               </TouchableOpacity>

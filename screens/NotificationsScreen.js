@@ -43,9 +43,18 @@ export default class NotificationsScreen extends React.Component {
             titleStyle={{ color: 'black', fontWeight: 'bold' }}
             subtitle={item.message}
             bottomDivider
+            onLongPress={this.renderHiddenItem}
           />
         )
    }
+
+   renderHiddenItem = () => (
+    <View style={styles.rowBack}>
+        <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+            <Text style={styles.backTextWhite}></Text>
+        </View>
+    </View>
+    )
 
   keyExtractor = (item, index) => index.toString()
 
@@ -64,12 +73,42 @@ export default class NotificationsScreen extends React.Component {
                             </Text>
                         </View>
                         )
-                        :(<FlatList renderItem={this.renderItem}
+                        :(
+                        <FlatList renderItem={this.renderItem}
                         data={this.state.allNotifications}
-                        keyExtractor={this.keyExtractor}/>)
+                        keyExtractor={this.keyExtractor}/>
+                        )
                     }
             </View>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    backTextWhite: {
+        color: '#FFF',
+        fontWeight:'bold',
+        fontSize:15
+    },
+    rowBack: {
+        alignItems: 'center',
+        backgroundColor: '#29b6f6',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 15,
+    },
+    backRightBtn: {
+        alignItems: 'center',
+        bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: 100,
+    },
+    backRightBtnRight: {
+        backgroundColor: '#29b6f6',
+        right: 0,
+    },
+})

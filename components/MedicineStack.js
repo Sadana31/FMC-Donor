@@ -1,30 +1,29 @@
 import * as React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import AppStackNavigator from '../components/AppStackNavigator';
-import MedicineStack from '../components/MedicineStack';
+import DonateMedicinesScreen from '../screens/DonateMedicinesScreen';
+import MedicineReceiverDetailsScreen from '../screens/MedicineReceiverDetailsScreen';
 import Donate from '../screens/Donate';
-import App from '../App';
 
-export default DonateStack = createStackNavigator({
+export default MedicineStack = createStackNavigator({
     DonateScreen: {
         screen: Donate,
         navigationOptions: {
             headerShown: false
         }
     },
-    Donate: {
-        screen: AppStackNavigator,
+    DonateMedicinesScreen: {
+        screen: DonateMedicinesScreen,
         navigationOptions: {
             headerShown: false
         }
     },
-    Medicines: {
-        screen: MedicineStack,
+    MedicineReceiverDetailsScreen: {
+        screen: MedicineReceiverDetailsScreen,
         navigationOptions: {
             headerShown: false
         }
     }
 },
 {
-    initialRouteName: "DonateScreen"
+    initialRouteName: "DonateMedicinesScreen"
 })

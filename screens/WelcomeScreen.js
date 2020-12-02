@@ -46,6 +46,7 @@ export default class WelcomeScreen extends React.Component{
     if(password !== confirmPassword){
       return Alert.alert("Passwords do not match")
     }
+
     else{
       firebase.auth().createUserWithEmailAndPassword(emailID, password)
       .then(()=>{
@@ -54,7 +55,8 @@ export default class WelcomeScreen extends React.Component{
           lastName:this.state.lastName,
           contact:this.state.contact,
           emailID:this.state.emailID,
-          address:this.state.address
+          address:this.state.address,
+          hasRequestedForMedicine: false,
         })
         return  Alert.alert(
           'User Added Successfully',
@@ -160,22 +162,21 @@ export default class WelcomeScreen extends React.Component{
               <TouchableOpacity
                 style={styles.registerButton}
                 onPress={()=>{
-                  if(this.state.firstName===undefined || this.state.lastName === undefined ||
-                  this.state.contact===undefined || this.state.address ===undefined ||
-                  this.state.emailID===undefined || this.state.password===undefined ||
-                  this.state.confirmPassword===undefined){
+                  if(this.state.firstName==="" || this.state.lastName === "" ||
+                  this.state.contact==="" || this.state.address ==="" ||
+                  this.state.emailID==="" || this.state.password==="" ||
+                  this.state.confirmPassword===""){
                     console.log("Check")
                     return Alert.alert("Please fill in all the details!!")
                   }
                   else{ 
-                    console.log("uncheck")
                     this.signUp(this.state.emailID, this.state.password, 
                       this.state.confirmPassword)
                     }
                   }
                 }
               > 
-              <Text style={styles.registerButtonText}>Register</Text>
+              <Text style={styles.registerButtonText}>REGISTER </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.modalBackButton}>
@@ -183,7 +184,7 @@ export default class WelcomeScreen extends React.Component{
                 style={styles.cancelButton}
                 onPress={()=>{this.setState({modalVisible:false})}}
               >
-              <Text style={styles.registerButtonText}>Cancel</Text>
+              <Text style={styles.registerButtonText}>CANCEL </Text>
               </TouchableOpacity>
             </View>
             </KeyboardAvoidingView>

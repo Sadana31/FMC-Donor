@@ -20,6 +20,16 @@ export default class Donate extends React.Component {
                 style={styles.button}>
                     <Text style={styles.buttonText}>Others</Text>
                 </TouchableOpacity>
+
+                <Text style={[styles.quote, {marginTop: 30}]}>
+                    "No act of kindness, no 
+                </Text>
+                <Text style={styles.quote}>
+                        no matter how small, is
+                </Text>
+                <Text style={styles.quote}>
+                    is ever wasted..."" ya 
+                </Text>
             </View>        
         )
     }
@@ -27,18 +37,25 @@ export default class Donate extends React.Component {
 
 const styles = StyleSheet.create({
     button: {
-        borderRadius: 10,
-        backgroundColor: "#0080ff",
+        borderRadius: 12,
+        backgroundColor: "#66b2ff",
         width: "60%",
-        height: "5%",
+        height: "8%",
         alignSelf: "center",
-        marginTop: 20
+        marginTop: 20,
+        marginBottom: 20
     },
     buttonText: {
         textAlign: "center",
         color: "white",
         fontWeight: "bold",
-        fontSize: 15,
-        marginTop: 6
+        fontSize: 18,
+        marginTop: 18,
+    },
+    quote: {
+        fontWeight: "bold",
+        fontSize :25,
+        color: "blue",
+        textAlign: "center",
     }
 })
