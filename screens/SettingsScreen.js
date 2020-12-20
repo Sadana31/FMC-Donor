@@ -66,7 +66,7 @@ export default class SettingsScreen extends React.Component {
           <MyHeader text="Settings" navigation ={this.props.navigation}/>
           <KeyboardAvoidingView behavior="margin" enabled style={styles.formContainer}>
               <Text style={styles.header}>
-                  FIRST NAME ENTER
+                  FIRST NAME 
               </Text>
               <TextInput
                 style={styles.inputBox}
@@ -96,7 +96,7 @@ export default class SettingsScreen extends React.Component {
               />
 
                 <Text style={styles.header}>
-                  CONTACT ENTER 
+                  CONTACT  
               </Text>
               <TextInput
                 style={styles.inputBox}
@@ -112,7 +112,7 @@ export default class SettingsScreen extends React.Component {
               />
 
                 <Text style={styles.header}>
-                  ADDRESS ENTER
+                  ADDRESS 
               </Text>
               <TextInput
                 style={styles.inputBox}
@@ -127,7 +127,7 @@ export default class SettingsScreen extends React.Component {
               />
 
                 <Text style={styles.header}>
-                  E-MAIL ENTER
+                  E-MAIL 
               </Text>
               <TextInput
                 style={styles.inputBox}
@@ -168,21 +168,22 @@ export default class SettingsScreen extends React.Component {
     },
     inputBox:{
       width:"75%",
-      height:"7%",
+      height:"5%",
       backgroundColor: "white",
       borderColor:'grey',
       borderRadius:10,
       borderWidth:2,
-      marginTop:5,
+      marginTop: RFValue(10),
       textAlign: "center",
-      fontWeight: "bold"
+      fontWeight: "bold",
+      fontSize: 18
     },
     button:{
       width:"55%",
       height:50,
       borderRadius:10,
       backgroundColor:"darkblue",
-      marginTop:30
+      marginTop: RFValue(30)
     },
     buttonText:{
       fontSize:18,
@@ -193,7 +194,7 @@ export default class SettingsScreen extends React.Component {
     },
     header: {
         fontWeight:"bold",
-        fontSize: RFValue(17),
+        fontSize: 20,
         textAlign: "center",
         marginTop: 30,
         color: "navy"

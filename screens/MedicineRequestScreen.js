@@ -3,13 +3,15 @@ import {
   Text, 
   View,
   SafeAreaView,
-  TouchableOpacity, StyleSheet } from 'react-native';
+  TouchableOpacity, StyleSheet,
+  Alert } from 'react-native';
   import { Avatar } from "react-native-elements";
 import MyHeader from '../components/MyHeader';
 import Carousel from 'react-native-snap-carousel';
 import firebase from 'firebase';
 import db from '../config';
 import * as ImagePicker from 'expo-image-picker';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class MedicineRequestScreen extends React.Component {
  
@@ -68,16 +70,16 @@ export default class MedicineRequestScreen extends React.Component {
     }
 
     selectPicture=async()=>{
-              const {cancelled, uri} = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4,3],
-                quality: 1
-              }) 
-              if(! cancelled){
-                this.uploadImage(uri,this.state.userID);
-              }
-            }
+      const {cancelled, uri} = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4,3],
+        quality: 1
+      }) 
+      if(! cancelled){
+        this.uploadImage(uri,this.state.userID);
+      }
+    }
           
   uploadImage=async(uri,imageName)=>{
     var response = await fetch(uri);
@@ -114,61 +116,11 @@ export default class MedicineRequestScreen extends React.Component {
         "type": "medicine",
         "imageURL": this.state.image
       })
-      db.collection("users").doc(this.state.docID).update({
-        hasRequestedForMedicine: true
-      })
       this.setState({
         name :'',
         requestID: randomRequestId
-    })
-    return Alert.alert("Medicine Requested Successfully")
-    }
-
-    receivedItems=(name)=>{
-      var userID = this.state.userID
-      var requestId = this.state.requestID
-      db.collection('receivedItems').add({
-          "userID": userID,
-          "name":name,
-          "requestID"  : requestId,
-          "Status"  : "received",
-          "type": "medicine"
       })
-    }
-
-    getDocID=()=>{
-      db.collection("users").where("emailID","==",this.state.userID)
-      .onSnapshot((snapshot)=>{
-        snapshot.forEach((doc)=>{
-          this.setState({docID: doc.id})
-        })
-      })
-    }
-
-    componentDidMount=()=>{
-      this.getDocID();
-      this.getRequestStatus();
-    }
-
-    getRequestStatus=()=>{
-      db.collection("users").where("emailID","==",this.state.userID).get()
-      .then((snapshot)=>{
-        snapshot.forEach((doc)=>{
-          this.setState({requestStatus: doc.data().hasRequestedForMedicine})
-        })
-      })
-    }
-
-    updateRequestStatus=()=>{
-      db.collection('users').where('emailID','==',this.state.userID).get()
-      .then((snapshot)=>{
-        snapshot.forEach((doc) => {
-          //updating the doc
-          db.collection('users').doc(this.state.docID).update({
-            hasRequestedForMedicine: false
-          })
-        })
-      })
+      return alert("Medicine Requested Successfully")
     }
 
     sendNotification=()=>{
@@ -199,34 +151,15 @@ export default class MedicineRequestScreen extends React.Component {
         })
       })
     }
+
+
     render() {
 
-      if(this.state.getRequestStatus){
-        return(
-              <View>
-              <MyHeader title="Medicines" navigation={this.props.navigation}/>
-
-              <Text style={[styles.head,{marginTop: 100}]}>
-                You already have an existing medicinal request
-              </Text>
-
-              <TouchableOpacity style={styles.button}
-              onPress={()=>{
-                this.sendNotification();
-                this.updateRequestStatus();
-                this.receivedItems(this.state.name);
-              }}>
-                <Text style={styles.buttonText}>I received the medicine</Text>
-              </TouchableOpacity>
-            </View>
-        )
-      }
-      else {
         return (
           <SafeAreaView style={{ alignItems: "center", flex: 1}}>
 
             <MyHeader text="Medicines" navigation={this.props.navigation}/>
-            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', marginBottom: -200}}>
+            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', marginBottom: -10}}>
                 <Carousel
                   layout={"default"}
                   ref={ref => this.carousel = ref}
@@ -236,8 +169,7 @@ export default class MedicineRequestScreen extends React.Component {
                   renderItem={this._renderItem}
                   onSnapToItem = { 
                     index =>{ 
-                    this.setState({name:index})
-                    console.log(this.state.carouselItems[index].title);
+                    this.setState({name:this.state.carouselItems[index].title})
                   }}/>
             </View>
 
@@ -252,30 +184,34 @@ export default class MedicineRequestScreen extends React.Component {
                 uri: this.state.image
                 }}
                 size="xlarge"
-                title="IMG"
+                title="Img"
                 onPress={()=>{this.selectPicture()}}
                 alignSelf="center"
                 showEditButton
                 containerStyle={styles.avatar}/>
 
-            <TouchableOpacity style={styles.button} onPress={this.addRequest()}>
+            <TouchableOpacity style={styles.button} 
+            onPress={()=>{
+              this.addRequest()
+            }}>
               <Text style={styles.buttonText}>REQUEST</Text>
             </TouchableOpacity>
             </View>
           </SafeAreaView>
         );
       }
-    }
+
 }
 
 const styles = StyleSheet.create({
     head: {
         fontWeight: "bold",
-        fontSize: 25,
+        fontSize: 20,
         color: "darkblue",
         textAlign: 'center',
         margin: 7,
-        padding: 5
+        padding: 5,
+        marginTop: -30
     },
     button: {
       borderRadius: 10,

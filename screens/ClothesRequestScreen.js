@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-
 import MyHeader from '../components/MyHeader';
 import db from '../config';
 import firebase from 'firebase';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class FoodRequestScreen extends React.Component {
     constructor(){
@@ -20,12 +21,20 @@ export default class FoodRequestScreen extends React.Component {
         db.collection("requestedItems").add({
             "name": this.state.clothName,
             "type": "cloth",
+            "size": this.state.clothSize,
+            "preferences": this.state.synopsis,
             "synopsis": this.state.synopsis,
             "requesterID": this.state.emailID,
             "date": firebase.firestore.FieldValue.serverTimestamp(),
             "requestID": this.createUniqueId()
         })
         return Alert.alert("Cloth requested successfully!!");
+        this.setState({
+            gender: "",
+            clothSize: "",
+            clothName: "",
+            synopsis: ""
+        })
     }
 
     createUniqueId(){
@@ -79,7 +88,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: "#0080ff",
         width: "90%",
-        margin: 20,
+        margin: RFValue(20),
         marginTop: 40,
         borderRadius: 10,
         textAlign: "center",
@@ -93,13 +102,13 @@ const styles = StyleSheet.create({
         width: "60%",
         height: "5%",
         alignSelf: "center",
-        marginTop: 20
+        marginTop: RFValue(20)
     },
     buttonText: {
         textAlign: "center",
         color: "white",
         fontWeight: "bold",
-        fontSize: 15,
-        marginTop: 6
+        fontSize: RFValue(15),
+        marginTop: 4
     }
 })

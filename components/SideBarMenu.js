@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import { render } from 'react-dom';
 import * as ImagePicker from 'expo-image-picker';
 import {Icon} from 'react-native-elements';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class CustomSideBarMenu extends Component{
   constructor(){
@@ -19,56 +20,62 @@ export default class CustomSideBarMenu extends Component{
     }
   }
 
-  selectPicture=async()=>{
-    const {cancelled, uri} = await ImagePicker.launchImageLibraryAsync({
+  selectPicture = async () => {
+    const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4,3],
-      quality: 1
-    }) 
-    if(! cancelled){
-      this.uploadImage(uri,this.state.userID);
-    }
-  }
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  uploadImage=async(uri,imageName)=>{
+    if (!cancelled) {
+      this.setState({image: uri})
+      this.uploadImage(uri, this.state.userID);
+    }
+  };
+
+  uploadImage = async (uri, imageName) => {
     var response = await fetch(uri);
     var blob = await response.blob();
-    var ref = firebase.storage().ref().child("users/" + imageName);
-    return ref.put(blob).then((response)=>{
+
+    var ref = firebase
+      .storage()
+      .ref()
+      .child("userProfiles/" + imageName);
+
+    return ref.put(blob).then((response) => {
       this.fetchImage(imageName);
-    })
+    });
+  };
+
+  fetchImage = (imageName) => {
+    var storageRef = firebase.storage().ref()
+      .child("userProfiles/" + imageName);
+
+    storageRef
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ image: url });
+      })
+      .catch((error) => {
+        this.setState({ image: "#" });
+      });
+  };
+
+  getUserProfile() {
+    db.collection("users").where("emailID", "==", this.state.userID)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          this.setState({
+            name: doc.data().firstName + " " + doc.data().lastName,
+            docID: doc.id,
+            image: doc.data().image,
+          });
+        });
+      });
   }
 
-  fetchImage=(imageName)=>{
-    var storageRef = firebase.storage().ref().child("users/" + imageName);
-    storageRef.getDownloadURL()
-    .then((url)=>{
-      this.setState({
-        image: url
-      })
-    })
-    .catch((error)=>{
-      this.setState({
-        image: "#"
-      })
-    })
-  }
-
-  getUserProfile=()=>{
-    db.collection("users").where("emailID","==",this.state.userID)
-    .onSnapshot((snapshot)=>{
-      snapshot.forEach((doc)=>{
-        this.setState({
-          name: doc.data().firstName + " " + doc.data().lastName,
-          docId: doc.id,
-          image: doc.data().image
-        })
-      })
-    })
-  }
-
-  componentDidMount(){
+  componentDidMount() {
     this.fetchImage(this.state.userID);
     this.getUserProfile();
   }
@@ -80,6 +87,7 @@ export default class CustomSideBarMenu extends Component{
                   source={{
                     uri: this.state.image
                   }}
+                  icon={{name: 'home', type: 'font-awesome'}}
                   size="xlarge"
                   onPress={()=>{this.selectPicture()}}
                   containerStyle={{marginTop: 50}}
@@ -131,7 +139,7 @@ var styles = StyleSheet.create({
       padding:10
     },
     logOutText:{
-      fontSize: 30,
+      fontSize: RFValue(30),
       fontWeight:'bold'
     }
   })

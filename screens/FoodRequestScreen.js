@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-
 import MyHeader from '../components/MyHeader';
 import db from '../config';
 import firebase from 'firebase';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class FoodRequestScreen extends React.Component {
     constructor(){
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: "#0080ff",
         width: "90%",
-        margin: 20,
+        margin: RFValue(20),
         marginTop: 40,
         borderRadius: 10,
         textAlign: "center",
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "white",
         fontWeight: "bold",
-        fontSize: 15,
+        fontSize: RFValue(15),
         marginTop: 6
     }
 })

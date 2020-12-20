@@ -13,6 +13,7 @@ import {
 import {Header} from 'react-native-elements';
 import db from '../config';
 import firebase from 'firebase';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class WelcomeScreen extends React.Component{
   constructor(){
@@ -71,6 +72,7 @@ export default class WelcomeScreen extends React.Component{
         var errorCode = error.code;
         var errorMessage = error.message;
         return Alert.alert(errorMessage)
+        console.log(errorMessage)
       });
     }
   }
@@ -201,9 +203,10 @@ export default class WelcomeScreen extends React.Component{
         {this.showModal()}
         <Header 
             centerComponent={{text: "FMC Donor", 
-                style:{fontWeight: "bold", fontSize: 20, color: "darkblue"}}}
-            backgroundColor="lightblue"
+                style:{fontWeight: "bold", fontSize: 20, color: "white"}}}
+            backgroundColor="#0080ff"
             navigation={this.props.navigation}/>
+            
         <View style={{borderWidth: 2, marginTop: 20, 
           borderRadius: 15, borderColor: "blue", padding: 20}}>
             <Text style={styles.head}>Welcome to FMC DONOR: </Text>
@@ -317,7 +320,7 @@ const styles = StyleSheet.create({
     },
     registerButtonText:{
       color:'#ff5722',
-      fontSize:15,
+      fontSize: RFValue(15),
       fontWeight:'bold'
     },
     cancelButton:{

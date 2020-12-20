@@ -1,10 +1,11 @@
 import React ,{Component} from 'react';
-import {View,Text,StyleSheet,TouchableOpacity, Alert} from 'react-native';
+import {View,Text,StyleSheet,TouchableOpacity, Alert, Image} from 'react-native';
 import {Card,Header,Icon} from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config.js';
+import {RFValue} from 'react-native-responsive-fontsize';
 
-export default class ReceiverDetailsScreen extends Component{
+export default class FoodReceiverDetailsScreen extends Component{
   constructor(props){
     super(props);
     this.state={
@@ -13,6 +14,7 @@ export default class ReceiverDetailsScreen extends Component{
       receiverID      : this.props.navigation.getParam('details')["requesterID"],
       requestID       : this.props.navigation.getParam('details')["requestID"],  
       itemName        : this.props.navigation.getParam('details')["name"],
+      synopsis        : this.props.navigation.getParam('details')["synopsis"],
       type: this.props.navigation.getParam('details')["type"],
       receiverName    : '',
       receiverContact : '',
@@ -35,7 +37,7 @@ getReceiverDetails(){
     })
   });
 
-  db.collection('requestedItems').where('requestID','==',this.state.requestID).get()
+  db.collection('requestedFoods').where('requestID','==',this.state.requestID).get()
   .then(snapshot=>{
     snapshot.forEach(doc => {
       this.setState({receiverRequestDocID:doc.id})
@@ -70,7 +72,7 @@ componentDidMount(){
 }
 
 deleteDoc=()=>{
-  db.collection("requestedItems").doc(this.state.receiverRequestDocID).delete()
+  db.collection("requestedFoods").doc(this.state.receiverRequestDocID).delete()
   .then(()=>{
     console.log("deleted")
   })
@@ -101,16 +103,16 @@ deleteDoc=()=>{
     return(
       <View style={styles.container}>
         <View style={{flex:0.1}}>
-          <Header
-            leftComponent ={<Icon name='arrow-left' type='feather' 
-            color='white'  onPress={() => this.props.navigation.goBack()}/>}
-            cecenterComponent={{text: this.props.text, 
-                style:{fontWeight: "bold", fontSize: 20, color: "darkblue"}}}
-            backgroundColor = "lightblue"
-          />
+            <Header
+                    leftComponent ={<Icon name='arrow-left' type='feather' 
+                    color='white'  onPress={() => this.props.navigation.navigate("DonateScreen")}/>}
+                    centerComponent={{text: "Donate items", 
+                        style:{fontWeight: "bold", fontSize: 20, color: "white"}}}
+                    backgroundColor = "#0080ff"
+                />
         </View>
         <View style={styles.card}>
-          <Card
+          <Card containerStyle={{marginBottom: 20}}
               title={"Item Information"}
               titleStyle= {{fontSize : 20}}
             >
@@ -118,12 +120,15 @@ deleteDoc=()=>{
               <Text style={{fontWeight:'bold'}}>Name : {this.state.itemName}</Text>
             </Card>
             <Card>
-              <Text style={{fontWeight:'bold'}}>Reason : {this.state.type}</Text>
+              <Text style={{fontWeight:'bold'}}>Type : {this.state.type}</Text>
+            </Card>
+            <Card>
+              <Text style={{fontWeight:'bold'}}>Details : {this.state.synopsis}</Text>
             </Card>
           </Card>
         </View>
         <View style={styles.card}>
-          <Card
+          <Card containerStyle={{marginBottom: 20}}
             title={"Receiver Information"}
             titleStyle= {{fontSize : 20}}
             >
@@ -153,6 +158,10 @@ deleteDoc=()=>{
             : null
           }
         </View>
+
+        <Text style={{fontSize: RFValue(15), textAlign: "center"}}>
+          "What you sow, so shall you reap..."
+        </Text>
       </View>
     )
   }
@@ -177,10 +186,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'orange',
   },
-  card: {
-    flex: 0.8, 
+  card: { 
     marginTop: 80, 
-    backgroundColor: "lightblue", 
+    backgroundColor: "#99ccff", 
     borderWidth: 3,
     margin: 10,
     borderRadius: 10

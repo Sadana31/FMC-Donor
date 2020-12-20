@@ -1,8 +1,9 @@
 import React ,{Component} from 'react';
 import {View,Text,StyleSheet,TouchableOpacity, Alert, Image} from 'react-native';
-import {Card,Header,Icon} from 'react-native-elements';
+import {Card,Header,Icon,Avatar} from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config.js';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 export default class MedicineReceiverDetailsScreen extends Component{
   constructor(props){
@@ -14,15 +15,13 @@ export default class MedicineReceiverDetailsScreen extends Component{
       requestID       : this.props.navigation.getParam('details')["requestID"],  
       itemName        : this.props.navigation.getParam('details')["name"],
       type: this.props.navigation.getParam('details')["type"],
-      imageURL: this.props.navigation.getParam('details')["imageURL"],
+      imageURL: "#",
       receiverName    : '',
       receiverContact : '',
       receiverAddress : '',
       receiverRequestDocID : ''
     }
   }
-
-
 
 getReceiverDetails(){
   db.collection('users').where('emailID','==',this.state.receiverID).get()
@@ -71,7 +70,7 @@ componentDidMount(){
 }
 
 deleteDoc=()=>{
-  db.collection("requestedItems").doc(this.state.receiverRequestDocID).delete()
+  db.collection("requestedMedicines").doc(this.state.receiverRequestDocID).delete()
   .then(()=>{
     console.log("deleted")
   })
@@ -98,43 +97,80 @@ deleteDoc=()=>{
   this.props.navigation.navigate('DonateScreen')
  }
 
+ fetchImage = (imageName) => {
+  var storageRef = firebase
+    .storage().ref().child("userPrescriptions/" + imageName);
+  storageRef
+    .getDownloadURL()
+    .then((url) => {
+      this.setState({ imageURL: url });
+    })
+    .catch((error) => {
+      this.setState({ imageURL: "#" });
+    });
+};
 
   render(){
     return(
       <View style={styles.container}>
         <View style={{flex:0.1}}>
-          <Header
+        <Header
             leftComponent ={<Icon name='arrow-left' type='feather' 
-            color='white'  onPress={() => this.props.navigation.goBack()}/>}
-            cecenterComponent={{text: this.props.text, 
-                style:{fontWeight: "bold", fontSize: 20, color: "darkblue"}}}
-            backgroundColor = "lightblue"
+            color='white'  onPress={() => this.props.navigation.navigate("DonateScreen")}/>}
+            centerComponent={{text: "Request Details", 
+                style:{fontWeight: "bold", fontSize: 20, color: "white"}}}
+            backgroundColor = "#0080ff"
           />
         </View>
-        <View style={styles.card}>
-          <Card
+        <View>
+          <Card containerStyle={[styles.card,{marginTop: 80}]}
               title={"Item Information"}
               titleStyle= {{fontSize : 20}}
             >
-            <Card >
-              <Text style={{fontWeight:'bold'}}>Name : {this.state.itemName}</Text>
-            </Card>
-            <Image source={{uri: this.state.imageURL}}/>
+            { this.state.itemName == ""
+            ?(
+              <Card >
+              <Text>Name of item not given by user</Text>
+              </Card>
+            )
+            :(
+              <Card >
+              <Text>Name : {this.state.itemName}</Text>
+              </Card>
+            )
+            }
+            <View style={{marginTop: 20}}>
+              <Text style={{fontSize: 25, textAlign:"center", textDecorationLine: "underline"}}>
+                Image of prescription
+              </Text>
+              { this.state.imageURL == "#"
+                ?(
+                  <Text style={{fontSize: 20, textAlign:"center", marginTop: 5}}>
+                    User has not uploaded a prescription
+                  </Text>
+                )
+                :(
+                  <Image style={{width:500, height:500, alignSelf: "center"}} 
+                  source={{uri: this.state.imageURL}}/>
+                )
+              }
+            </View>
           </Card>
         </View>
-        <View style={styles.card}>
-          <Card
+
+        <View style={{marginTop:10}}>
+          <Card containerStyle={[styles.card,{marginTop: 50}]}
             title={"Receiver Information"}
             titleStyle= {{fontSize : 20}}
             >
             <Card>
-              <Text style={{fontWeight:'bold'}}>Name: {this.state.receiverName}</Text>
+              <Text>Name: {this.state.receiverName}</Text>
             </Card>
             <Card>
-              <Text style={{fontWeight:'bold'}}>Contact: {this.state.receiverContact}</Text>
+              <Text>Contact: {this.state.receiverContact}</Text>
             </Card>
             <Card>
-              <Text style={{fontWeight:'bold'}}>Address: {this.state.receiverAddress}</Text>
+              <Text>Address: {this.state.receiverAddress}</Text>
             </Card>
           </Card>
         </View>
@@ -178,11 +214,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
   },
   card: {
-    flex: 0.8, 
-    marginTop: 80, 
-    backgroundColor: "lightblue", 
+    borderColor: "darkblue",
+    borderRadius: 5,
     borderWidth: 3,
-    margin: 10,
-    borderRadius: 10
+
   }
 })
